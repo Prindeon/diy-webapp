@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 function CreatePost() {
     const [headerImage, setHeaderImage] = useState(null)
@@ -12,6 +13,7 @@ function CreatePost() {
     const [tags, setTags] = useState('')
     const [materials, setMaterials] = useState('')
     const [steps, setSteps] = useState([{ description: '', image: null}])
+    const navigate = useNavigate()
 
     // Header image selection
     const handleHeaderImageChange = async (e) => {
@@ -54,7 +56,12 @@ function CreatePost() {
 
     // handle form submisison
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+    
+        // Generate slug from project name
+        const slug = generateSlug(projectName);
+        console.log("Generated slug:", slug); // Log to verify slug creation
+    
         const postData = {
             headerImage: headerImageUrl,
             projectName,
@@ -64,23 +71,39 @@ function CreatePost() {
             materials: materials.split(',').map(material => material.trim()),
             steps,
             createdAt: new Date(),
-        }
-
+            slug, // Ensure slug is included here
+        };
+    
         try {
-            await addDoc(collection(db, 'posts'), postData)
-            alert("Post created successfully!")
+            // Add post to Firestore
+            const docRef = await addDoc(collection(db, 'posts'), postData);
+            console.log("Document written with ID:", docRef.id); // Log to verify write operation
+    
+            // Navigate to the newly created post's page using the slug
+            navigate(`/post/${slug}`);
         } catch (error) {
-            console.error("Error creating post:", error)
-            alert("Failed to create post. Try again.")
+            console.error("Error creating post:", error);
+            alert("Failed to create post.");
         }
+    };
+
+    function generateSlug(title) {
+        return title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+            .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
     }
 
     return (
         <div className='create-post-container'>
-            <h2>Create a new Project</h2>
-            <form onSubmit={handleSumbit}>
+            <div className="header">
+                <span className="back-button">{"<"}</span>
+                <h2>New Project</h2>
+                <span className="publish-button">Publish</span>
+            </div>
+            <form onSubmit={handleSubmit}>
                 {/* Header Image Selection */}
-                <div>
+                <div className='form-group'>
                     <label>
                         Header Image:
                         <input type='file' onChange={handleHeaderImageChange} />
@@ -89,36 +112,46 @@ function CreatePost() {
                 </div>
 
                 {/* Project Information */}
-                <label>
-                    Project Name:
-                    <input type='text' value={projectName} onChange={(e) => setProjectName(e.target.value)} required />
-                </label>
-                <label>
-                    Complexity:
-                    <select value={complexity} onChange={(e) => setComplexity(e.target.value)} required>
-                        <option value="">Select complexity</option>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
-                    </select>
-                </label>
-                <label>
-                    Duration:
-                    <input type='text' value={duration} onChange={(e) => setDuration(e.target.value)} required />
-                </label>
-                <label>
-                    Tags (Seperated by commas):
-                    <input type='text' value={tags} onChange={(e) => setTags(e.target.value)} required />
-                </label>
-                <label>
-                    Materials and tools (Seperated by commas):
-                    <input type='text' value={materials} onChange={(e) => setMaterials(e.target.value)} required />
-                </label>
+                <div className="form-group">
+                    <label>
+                        Project Name:
+                        <input type='text' value={projectName} onChange={(e) => setProjectName(e.target.value)} required />
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        Complexity:
+                        <select value={complexity} onChange={(e) => setComplexity(e.target.value)} required>
+                            <option value="">Select complexity</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        Duration:
+                        <input type='text' value={duration} onChange={(e) => setDuration(e.target.value)} required />
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        Tags (Seperated by commas):
+                        <input type='text' value={tags} onChange={(e) => setTags(e.target.value)} required />
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        Materials and tools (Seperated by commas):
+                        <input type='text' value={materials} onChange={(e) => setMaterials(e.target.value)} required />
+                    </label>
+                </div>
 
                 {/* Steps */}
                 <h3>Steps</h3>
                 {steps.map((step, index) => (
-                    <div key={index} className='step'>
+                    <div key={index} className='form-group'>
                         <label>
                             Step {index + 1} Description:
                             <textarea

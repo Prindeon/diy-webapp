@@ -2,13 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Signup from './components/Signup';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
 import PrivateRoute from './components/PrivateRoute';
 import NavBar from './components/NavBar';
-import './app.css'
+import './app.css';
+import HomePage from './components/HomePage';
 import CreatePost from './components/CreatePost';
+import PostDisplay from './components/PostDisplay';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
             path="/"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <HomePage /> {/* HomePage includes Dashboard */}
               </PrivateRoute>
             }
           />
@@ -44,15 +45,26 @@ function App() {
               </PrivateRoute>
             }
           />
-            {/* Additional Routes */}
-            <Route path="/community" element={<div>Community Page</div>} />
-            <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/inbox" element={<div>Inbox Page</div>} />
-          </Routes>
-          <NavBar />
+          <Route 
+            path="/create-post" 
+            element={
+              <PrivateRoute>
+                <CreatePost />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/post/:slug" element={<PostDisplay />} />
+
+          {/* Additional Routes */}
+          <Route path="/community" element={<div>Community Page</div>} />
+          <Route path="/inbox" element={<div>Inbox Page</div>} />
+        </Routes>
+        
+        {/* Render NavBar */}
+        <NavBar />
       </AuthProvider>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

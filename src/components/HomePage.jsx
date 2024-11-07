@@ -19,8 +19,8 @@ function HomePage() {
         fetchPosts()
     }, [])
 
-    const handleCardClick = (postId) => {
-        navigate(`/post${postId}`)
+    const handleCardClick = (slug) => {
+        navigate(`/post/${slug}`)
     }
 
     return (
@@ -29,7 +29,7 @@ function HomePage() {
             <h2>Explore Projects</h2>
             <div className="post-grid">
                 {posts.map(post => (
-                    <div key={post.id} className='post-card' onClick={() => handleCardClick(post.id)}>
+                    <div key={post.id} className='post-card' onClick={() => handleCardClick(post.slug)}>
                         <img src={post.headerImage} alt={post.projectName} className='post-image' />
                         <h3 className='post-title'>{post.projectName}</h3>
                         <p className='post-info'>Complexity: {post.complexity}</p>
