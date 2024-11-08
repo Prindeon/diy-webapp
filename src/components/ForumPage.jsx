@@ -8,7 +8,7 @@ import {
   doc,
   increment,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/firestorage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../context/AuthContext";
 
 function ForumPage() {
