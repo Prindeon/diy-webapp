@@ -1,15 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import EditProfile from './components/EditProfile';
-import PrivateRoute from './components/PrivateRoute';
-import NavBar from './components/NavBar';
-import './app.css';
-import HomePage from './components/HomePage';
-import CreatePost from './components/CreatePost';
-import PostDisplay from './components/PostDisplay';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
+import PrivateRoute from "./components/PrivateRoute";
+import NavBar from "./components/NavBar";
+import "./app.css";
+import HomePage from "./components/HomePage";
+import CreatePost from "./components/CreatePost";
+import PostDisplay from "./components/PostDisplay";
+import ForumPage from "./components/ForumPage";
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route 
+          <Route
             path="/profile"
             element={
               <PrivateRoute>
@@ -37,7 +38,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route 
+          <Route
             path="/edit-profile"
             element={
               <PrivateRoute>
@@ -45,8 +46,8 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route 
-            path="/create-post" 
+          <Route
+            path="/create-post"
             element={
               <PrivateRoute>
                 <CreatePost />
@@ -56,10 +57,10 @@ function App() {
           <Route path="/post/:slug" element={<PostDisplay />} />
 
           {/* Additional Routes */}
-          <Route path="/community" element={<div>Community Page</div>} />
+          <Route path="/community" element={<ForumPage />} />
           <Route path="/inbox" element={<div>Inbox Page</div>} />
         </Routes>
-        
+
         {/* Render NavBar */}
         <NavBar />
       </AuthProvider>
