@@ -12,7 +12,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../context/AuthContext";
 
 function ForumPage() {
-  const [poosts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({
     title: "",
     content: "",
