@@ -4,6 +4,7 @@ import { db, storage } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
 
 function Profile() {
     const { currentUser } = useAuth();
@@ -17,8 +18,13 @@ function Profile() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setProfileData(docSnap.data());
+                    const data = docSnap.data()
+
+                    // Sets title of the page relative to the profile username
+                    setProfileData(data)
+                    document.title = `${data.username} : CraftNess`
                 }
+                
             } catch (err) {
                 console.error('Error fetching user data:', err);
             }
@@ -38,6 +44,10 @@ function Profile() {
             await updateDoc(doc(db, 'users', currentUser.uid), {
                 profilePicUrl: downloadUrl,
             });
+
+            await updateProfile(currentUser, {
+                photoURL: downloadUrl,
+            })
 
             // Update local state to reflect the new profile picture
             setProfileData((prevData) => ({

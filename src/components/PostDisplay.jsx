@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 function PostDisplay() {
     const { slug } = useParams(); // Get slug from the URL
     const [postData, setPostData] = useState(null);
+    
 
     useEffect(() => {
         async function fetchPostData() {
@@ -15,7 +16,11 @@ function PostDisplay() {
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    setPostData(querySnapshot.docs[0].data());
+                    const data = querySnapshot.docs[0].data();
+
+                    // Sets title of the page relative to the post title
+                    setPostData(data)
+                    document.title = `${data.projectName} : CraftNess`
                 } else {
                     console.log("No such post!");
                 }
@@ -23,6 +28,8 @@ function PostDisplay() {
                 console.error("Error fetching post data:", error);
             }
         }
+
+        
 
         fetchPostData();
     }, [slug]);

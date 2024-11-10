@@ -1,16 +1,26 @@
-/* Center the app and provide a max width */
 #app {
-  max-width: 440px;
+  max-width: 360px;
+  height: 100vh;
   margin: 0 auto;
-  margin-bottom: 70px;
-  padding: 2rem;
-  font-family: Arial, sans-serif;
-  color: #2b2b2b;
-  background-color: #dbdbdb;
+  background-color: white;
+}
+:root {
+  --brand-red: #FF5A5F;
+  --red-hover: #dd4c51;
+  --text-grey: #404040;
+  --btn-stroke: #DCDCDD;
+  --gradient: linear-gradient(90deg, #FFB997, #FF5A5F);
+  --transparent-btn: #EFEFEF;
 }
 
-/* Nav Bar */
-/* Bottom Navigation Bar */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ---------------------------------------
+    Nav bar 
+------------------------------------------ */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -18,11 +28,9 @@
   width: 100%;
   height: 70px;
   background-color: #fff;
-  border-top: 1px solid #ddd;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
@@ -36,25 +44,17 @@
   font-weight: 500;
   transition: color 0.2s;
 }
-
-.nav-item:hover {
-  color: #222;
-}
-
 .nav-item.active {
   color: #ff5a5f; /* Active color */
 }
-
 .nav-icon {
   font-size: 1.5rem;
   margin-bottom: 5px;
 }
-
 .create .nav-icon {
   font-size: 2rem; /* Larger icon for create button */
   color: #4a90e2;
 }
-
 .profile-icon {
   width: 28px;
   height: 28px;
@@ -69,7 +69,104 @@
   color: inherit;
 }
 
-/* Profile Card Styling */
+/* ---------------------------------------
+    Login and Sign up 
+------------------------------------------ */
+.auth-container {
+  width: 360px;
+  margin: 0 auto;
+  margin-top: 45vh;
+  transform: translateY(-50%);
+  text-align: center;
+}
+.auth-container h2 {
+  font-size: 2rem;
+  color: #2c2c2c;
+  margin-bottom: 20px;
+}
+.auth-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.auth-container label {
+  width: 90%;
+  color: #2c2c2c;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.9rem;
+  border: 1px solid var(--btn-stroke);
+  border-radius: 5px;
+  background-color: var(--transparent-btn);
+  outline: none;
+  color: var(--text-grey);
+  box-sizing: border-box;
+}
+
+.auth-container input:focus {
+  border-color: var(--brand-red);
+}
+
+/* Button Styling */
+.auth-container button {
+  width: 90%;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: var(--brand-red);
+  border: none;
+  border-radius: 5px;
+
+  transition: background-color 0.3s ease;
+}
+.auth-container button:hover {
+  background-color: var(--red-hover);
+}
+.auth-container .error {
+  width: 90%;
+  margin: 0 auto;
+  color: #c62828;
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+/* Link to Login/Signup */
+.auth-container p {
+  font-size: 0.9rem;
+  color: var(--text-grey);
+}
+
+.auth-container a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: bold;
+}
+.auth-container a:hover {
+  text-decoration: underline;
+}
+.remember-me {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ---------------------------------------
+    Profile Card 
+------------------------------------------ */
 .profile-container {
   width: 400px;
   margin: 50px auto;
@@ -249,106 +346,10 @@
 }
 
 
-/* Login and sign up */
 
-/* Authentication Container Styling */
-.auth-container {
-  width: 400px;
-  margin: 50px auto;
-  padding: 30px;
-  border-radius: 10px;
-  background-color: #2c2c2c;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  color: #f1f1f1;
-  text-align: center;
-  font-family: Arial, sans-serif;
-}
-
-.auth-container h2 {
-  font-size: 1.8rem;
-  color: #fff;
-  margin-bottom: 20px;
-}
-
-/* Form Styling */
-.auth-container form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.auth-container label {
-  width: 100%;
-  color: #ccc;
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.auth-container input {
-  width: 100%;
-  padding: 10px;
-  font-size: 0.9rem;
-  border: 1px solid #555;
-  border-radius: 5px;
-  background-color: #333;
-  color: #fff;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.auth-container input:focus {
-  border-color: #4a90e2;
-}
-
-/* Button Styling */
-.auth-container button {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #4a90e2;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.auth-container button:hover {
-  background-color: #357abd;
-}
-
-/* Error Message Styling */
-.auth-container .error {
-  text-align: center;
-  color: #c62828;
-  background-color: #ffebee;
-  border: 1px solid #ef9a9a;
-  padding: 10px;
-  border-radius: 5px;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-/* Link to Login/Signup */
-.auth-container p {
-  font-size: 0.9rem;
-  color: #ddd;
-}
-
-.auth-container a {
-  color: #4a90e2;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.auth-container a:hover {
-  text-decoration: underline;
-}
-
-
-/* Create Post Page  */
+/* ---------------------------------------
+    Create post page 
+------------------------------------------ */
 .create-post-container {
   max-width: 500px;
   margin: 0 auto;
@@ -441,37 +442,9 @@
   background-color: #357abd;
 }
 
-
-/* Post card */
-/* Post Card Styling */
-.post-card {
-  position: relative;
-  width: 100%;
-  max-width: 300px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  margin: 10px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.post-card:hover {
-  transform: scale(1.05);
-}
-
-.post-image-container {
-  position: relative;
-}
-
-.post-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
+/* ---------------------------------------
+    Post cards 
+------------------------------------------ */
 .like-count {
   position: absolute;
   top: 10px;
@@ -539,7 +512,6 @@
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .post-display h2 {
@@ -560,4 +532,149 @@
 .step h4 {
   font-size: 1.2rem;
   margin-bottom: 5px;
+}
+
+/* ---------------------------------------
+    Comments 
+------------------------------------------ */
+.comment {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+}
+
+.comment-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: #ccc; /* Placeholder background color */
+}
+
+.comment-author {
+  font-weight: bold;
+}
+
+.comment-time {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* ---------------------------------------
+    Other user profiles 
+------------------------------------------ */
+.user-profile {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.profile-header {
+  padding: 20px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-top: -60px;
+  border: 4px solid white;
+}
+
+.follow-button {
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+/* ---------------------------------------
+    Home page 
+------------------------------------------ */
+.home-page {
+  padding: 20px;
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.post-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #fff;
+  transition: transform 0.2s;
+}
+
+.post-card:hover {
+  transform: scale(1.03);
+}
+
+.post-card-header {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 16px);
+}
+
+.likes, .bookmark {
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.bookmark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.post-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.post-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 12px;
+  text-align: left;
+}
+
+.post-details {
+  font-size: 14px;
+  color: #555;
+  margin: 0 12px 12px;
 }

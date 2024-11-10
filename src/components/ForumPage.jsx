@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 function ForumPage() {
   const [posts, setPosts] = useState([]);
@@ -31,6 +32,8 @@ function ForumPage() {
       }));
       setPosts(postsList);
     }
+
+    document.title = 'Forum : CraftNess'
 
     fetchPosts();
   }, []);
@@ -102,22 +105,24 @@ function ForumPage() {
       {/* Posts Display */}
       <div className="post-list">
         {posts.map((post) => (
-          <div key={post.id} className="post-card">
-            <h3>{post.title}</h3>
-            {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
-            <p>{post.content}</p>
-            <p>Tag: {post.tag}</p>
-            <p>Likes: {post.likes}</p>
-            {post.tag === "Question" && post.resolved === false && (
-              <button onClick={() => handleMarkResolved(post.id)}>
-                Mark as Resolved
+          <Link to={`/forum/post/${post.id}`} key={post.id}>
+            <div key={post.id} className="post-card">
+              <h3>{post.title}</h3>
+              {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
+              <p>{post.content}</p>
+              <p>Tag: {post.tag}</p>
+              <p>Likes: {post.likes}</p>
+              {post.tag === "Question" && post.resolved === false && (
+                <button onClick={() => handleMarkResolved(post.id)}>
+                  Mark as Resolved
+                </button>
+              )}
+              <button onClick={() => handleLikePost(post.id)}>Like</button>
+              <button onClick={() => navigate(`/forum/post/${post.id}`)}>
+                View Comments
               </button>
-            )}
-            <button onClick={() => handleLikePost(post.id)}>Like</button>
-            <button onClick={() => navigate(`/forum/post/${post.id}`)}>
-              View Comments
-            </button>
-          </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

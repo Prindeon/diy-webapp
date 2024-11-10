@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 
 function Signup() {
     const emailRef = useRef()
@@ -24,6 +25,10 @@ function Signup() {
                 emailRef.current.value,
                 passwordRef.current.value
             )
+
+            await updateProfile(userCredential.user, {
+                displayName: usernameRef.current.value,
+            })
 
             // Add additional user data to Firestore
             await setDoc(doc(db, 'users', userCredential.user.uid), {

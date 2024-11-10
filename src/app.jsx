@@ -11,6 +11,8 @@ import HomePage from "./components/HomePage";
 import CreatePost from "./components/CreatePost";
 import PostDisplay from "./components/PostDisplay";
 import ForumPage from "./components/ForumPage";
+import DetailedPost from "./components/ForumPost";
+import UserProfile from './components/UserProfiles'
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
           {/* Public Routes */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+
 
           {/* Protected Routes */}
           <Route
@@ -57,6 +60,8 @@ function App() {
           <Route path="/post/:slug" element={<PostDisplay />} />
 
           {/* Additional Routes */}
+          <Route path="/user/:userId" element={<UserProfile />} />
+          <Route path="/forum/post/:postId" element={<DetailedPost />} />
           <Route path="/community" element={<ForumPage />} />
           <Route path="/inbox" element={<div>Inbox Page</div>} />
         </Routes>
