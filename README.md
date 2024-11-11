@@ -1,0 +1,1 @@
+WebApp where users can share their interior DIY projects, tutorials or guides, while also interacting with the community through comments, likes and tips. Additionally, the WebApp features a forum where users can ask questions about anything DIY related.
