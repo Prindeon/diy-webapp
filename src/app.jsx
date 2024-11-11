@@ -13,23 +13,29 @@ import PostDisplay from "./components/PostDisplay";
 import ForumPage from "./components/ForumPage";
 import DetailedPost from "./components/ForumPost";
 import UserProfile from './components/UserProfiles'
+import Settings from "./components/Settings";
+import ScrollToTop from "./components/ScrollToTop";
+import Header from "./components/Header";
+import EditPost from "./components/EditPost";
 
 function App() {
   return (
     <Router>
       <AuthProvider>
+      {/* This scrolls the page to the top upon navigating to a new route */}
+      <ScrollToTop />
         <Routes>
           {/* Public Routes */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
 
 
-          {/* Protected Routes */}
+          {/* Protected Route only  accessible to when signed in */}
           <Route
             path="/"
             element={
               <PrivateRoute>
-                <HomePage /> {/* HomePage includes Dashboard */}
+                <HomePage />
               </PrivateRoute>
             }
           />
@@ -57,17 +63,45 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route 
+            path="/edit-post/:slug" 
+            element={
+            <PrivateRoute>
+              <EditPost />
+            </PrivateRoute>
+            } 
+          />
           <Route path="/post/:slug" element={<PostDisplay />} />
 
           {/* Additional Routes */}
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/forum/post/:postId" element={<DetailedPost />} />
           <Route path="/community" element={<ForumPage />} />
-          <Route path="/inbox" element={<div>Inbox Page</div>} />
+          <Route path="/inbox" 
+            element={
+              <div>
+                <Header
+                title={'CraftNess'}
+                isHelpButton={true}
+                rightButtonType="dm"
+                titleSize='1.7rem'
+            />
+                <p style="margin: 60% 20%;">You don't have any messages in your inbox yet...</p>
+              </div>
+            } />
+          <Route 
+            path="/settings" 
+            element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            } 
+          />
         </Routes>
 
         {/* Render NavBar */}
         <NavBar />
+
       </AuthProvider>
     </Router>
   );

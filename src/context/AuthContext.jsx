@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore'; 
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext()
 

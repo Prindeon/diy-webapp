@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { db } from '../firebase'
@@ -16,6 +16,11 @@ function Login() {
     const handleRememberMeChange = (e) => {
         setRememberMe(e.target.checked)
     }
+
+    // useEffect(() => {
+    //     // disable scrolling on this page
+    //     document.body.style.overflow = 'hidden'
+    // }, [])
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -56,7 +61,11 @@ function Login() {
 
     return (
         <div className='auth-container'>
-            <h2>Log In</h2>
+            <div className="logo-container">
+                <img src="/logo.png" alt="CraftNess Logo" />
+                <span>CraftNess</span>
+                <p>Craft, Connect, and Share <br />Your DIY Journey Starts Here</p>
+            </div>
             {error && <p className='error'>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <label>

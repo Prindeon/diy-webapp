@@ -3,8 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { db, storage } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
-import { updateProfile } from 'firebase/auth';
+import { useNavigate, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import Header from './Header';
 
 function Profile() {
     const { currentUser } = useAuth();
@@ -18,13 +20,10 @@ function Profile() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    const data = docSnap.data()
-
-                    // Sets title of the page relative to the profile username
-                    setProfileData(data)
-                    document.title = `${data.username} : CraftNess`
+                    const data = docSnap.data();
+                    setProfileData(data);
+                    document.title = `${data.username} : CraftNess`;
                 }
-                
             } catch (err) {
                 console.error('Error fetching user data:', err);
             }
@@ -40,16 +39,10 @@ function Profile() {
             await uploadBytes(storageRef, file);
             const downloadUrl = await getDownloadURL(storageRef);
 
-            // Update profile picture URL in Firestore
             await updateDoc(doc(db, 'users', currentUser.uid), {
                 profilePicUrl: downloadUrl,
             });
 
-            await updateProfile(currentUser, {
-                photoURL: downloadUrl,
-            })
-
-            // Update local state to reflect the new profile picture
             setProfileData((prevData) => ({
                 ...prevData,
                 profilePicUrl: downloadUrl,
@@ -62,45 +55,53 @@ function Profile() {
     }
 
     return (
-        <div className='profile-container'>
-            <div className='profile-header' style={{ background: 'linear-gradient(orange, pink)' }}>
-                <div className='profile-picture'>
-                    <label htmlFor='profilePicInput'>
+    <div>
+        <Header 
+            title="Profile"
+            showLeftButton={true}
+            isHelpButton={false}
+            rightButtonType="settings"
+            titleFont={'Inter'}
+            headerHeight='60px'
+            paddingBottom='60px'
+        />
+        <div className="profile-container">
+                    <label htmlFor="profilePicInput">
                         <img
                             src={profileData.profilePicUrl || 'default_profile_picture.png'}
-                            alt='Profile'
-                            className='profile-image'
-                            style={{ width: '100px', height: '100px', borderRadius: '50%', cursor: 'pointer' }}
+                            alt="Profile"
+                            className="profile-picture"
                         />
                     </label>
                     <input
-                        type='file'
-                        id='profilePicInput'
+                        type="file"
+                        id="profilePicInput"
                         style={{ display: 'none' }}
                         onChange={handleProfilePicUpload}
                     />
+                <div className="profile-info">
+                    <h2>@{profileData.username}</h2>
+                    <p>{profileData.firstName} {profileData.lastName}</p>
                 </div>
-                <h2>@{profileData.username}</h2>
-                <p>{profileData.firstName} {profileData.lastName}</p>
-            </div>
-            <div className='profile-stats'>
+            <div className="profile-stats">
                 <div>
                     <strong>2</strong>
-                    <p>creator level</p>
+                    <p>Creator Level</p>
                 </div>
                 <div>
                     <strong>3</strong>
-                    <p>posts</p>
+                    <p>Posts</p>
                 </div>
                 <div>
                     <strong>21</strong>
-                    <p>followers</p>
+                    <p>Followers</p>
                 </div>
             </div>
-            <button className='edit-profile-button' onClick={() => navigate('/edit-profile')}>
+            <button className="edit-profile-button" onClick={() => navigate('/edit-profile')}>
                 Edit Profile
             </button>
         </div>
+    </div>    
     );
 }
 

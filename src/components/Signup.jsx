@@ -52,7 +52,7 @@ function Signup() {
     return (
         <div className='auth-container'>
             <h2>Sign Up</h2>
-            {Error && <p className='error'>{error}</p>}
+            {error && <p className='error'>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <label>
                     First Name:

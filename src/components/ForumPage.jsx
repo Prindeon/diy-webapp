@@ -15,9 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 function ForumPage() {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({
-    title: "",
     content: "",
-    tag: "question",
     imageUrl: "",
   });
   const { currentUser } = useAuth();
@@ -50,16 +48,14 @@ function ForumPage() {
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    if (!newPost.title || !newPost.content) return;
+    if (!newPost.content) return;
 
     await addDoc(collection(db, "posts"), {
       ...newPost,
       createdAt: new Date(),
-      resolved: newPost.tag === "Question" ? false : null,
-      likes: 0,
     });
 
-    setNewPost({ title: "", content: "", tag: "Question", imageUrl: "" });
+    setNewPost({content: "", imageUrl: "" });
   };
 
   const handleLikePost = async (postId) => {
@@ -76,53 +72,34 @@ function ForumPage() {
     <div className="forum-page">
       <h2>Forum</h2>
 
-      <form onSubmit={handleSubmitPost}>
-        <input
-          type="text"
-          placeholder="Post Title"
-          value={newPost.title}
-          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-          required
-        />
-        <textarea
-          placeholder="PostContent"
-          value={newPost.content}
-          onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-          required
-        />
-        <select
-          value={newPost.tag}
-          onChange={(e) => setNewPost({ ...newPost, tag: e.target.value })}
-          required
-        >
-          <option value="Question">Question</option>
-          <option value="Showcase">Project Showcase</option>
-        </select>
-        <input type="file" onChange={handleImageUpload} />
-        <button type="submit">Create Post</button>
-      </form>
+      {/* Post Creation Form */}
+      <div className="create-post-form">
+        <h3>Start a thread</h3>
+        <form onSubmit={handleSubmitPost}>
+          <textarea
+            placeholder="Write your post here..."
+            value={newPost.content}
+            onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+            required
+          />
+          <input type="file" onChange={handleImageUpload} />
+          <button type="submit">Post</button>
+        </form>
+      </div>
 
       {/* Posts Display */}
-      <div className="post-list">
+      <div className="forum-list">
         {posts.map((post) => (
-          <Link to={`/forum/post/${post.id}`} key={post.id}>
-            <div key={post.id} className="post-card">
-              <h3>{post.title}</h3>
+          
+            <div key={post.id} className="forum-card">
               {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
               <p>{post.content}</p>
-              <p>Tag: {post.tag}</p>
-              <p>Likes: {post.likes}</p>
-              {post.tag === "Question" && post.resolved === false && (
-                <button onClick={() => handleMarkResolved(post.id)}>
-                  Mark as Resolved
+              <Link to={`/forum/post/${post.id}`} key={post.id}>
+                <button onClick={() => navigate(`/forum/post/${post.id}`)}>
+                  View Comments
                 </button>
-              )}
-              <button onClick={() => handleLikePost(post.id)}>Like</button>
-              <button onClick={() => navigate(`/forum/post/${post.id}`)}>
-                View Comments
-              </button>
+              </Link>
             </div>
-          </Link>
         ))}
       </div>
     </div>

@@ -102,7 +102,7 @@ function DetailedPost() {
     };
 
     return (
-        <div className="post-detail">
+        <div className="forum-post-detail">
             {post && (
                 <>
                     <h2>{post.title}</h2>
@@ -129,7 +129,7 @@ function DetailedPost() {
                         <Link to={`/user/${comment.author}`}>
                             <div className="comment-header">
                                 <img
-                                    src={comment.authorProfilePic || 'default_profile_picture.png'}
+                                    src={comment.authorProfilePic || '/default_profile_picture.png'}
                                     alt="Profile"
                                     className="comment-profile-pic"
                                 />

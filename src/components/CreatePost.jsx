@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { Route, useNavigate } from 'react-router-dom';
+import Header from './Header';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../context/AuthContext';
 
 function CreatePost() {
     const [headerImage, setHeaderImage] = useState(null)
@@ -14,6 +18,10 @@ function CreatePost() {
     const [materials, setMaterials] = useState('')
     const [steps, setSteps] = useState([{ description: '', image: null}])
     const navigate = useNavigate()
+    const formRef = useRef(null)
+    const { currentUser } = useAuth()
+
+
 
     // Header image selection
     const handleHeaderImageChange = async (e) => {
@@ -56,7 +64,7 @@ function CreatePost() {
 
     // handle form submisison
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
     
         // Generate slug from project name
         const slug = generateSlug(projectName);
@@ -71,8 +79,10 @@ function CreatePost() {
             materials: materials.split(',').map(material => material.trim()),
             steps,
             createdAt: new Date(),
-            slug, // Ensure slug is included here
-        };
+            slug,
+            authorUID: currentUser.uid,
+            
+        }
     
         try {
             // Add post to Firestore
@@ -94,20 +104,40 @@ function CreatePost() {
             .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
     }
 
+    // Function to trigger form submission - requestSubmit will trigger the HTML5 form validation before publishing
+    // This is necesarry because without this, the code would try to publish the post without the adequate data.
+    const handlePublishClick = () => {
+        if (formRef.current) {
+            formRef.current.requestSubmit()
+        }
+    }
+
     return (
+    <div>
+        <Header 
+        title="New Project"
+        showLeftButton={true}
+        isHelpButton={false}
+        rightButtonType="publish"
+        onPublishClick={handlePublishClick}
+        titleFont={'Inter'}
+    />
         <div className='create-post-container'>
-            <div className="header">
-                <span className="back-button">{"<"}</span>
-                <h2>New Project</h2>
-                <span className="publish-button">Publish</span>
-            </div>
-            <form onSubmit={handleSubmit}>
+            <form ref={formRef} onSubmit={handleSubmit}>
+
                 {/* Header Image Selection */}
                 <div className='form-group'>
-                    <label>
-                        Header Image:
-                        <input type='file' onChange={handleHeaderImageChange} />
+                    <label class="insert-file-label">
+                        <input 
+                            type='file' 
+                            onChange={handleHeaderImageChange} 
+                            required 
+                            style="display: none;"
+                            id="headerImage"
+                        />
+                       <span>Select Header Image</span>
                     </label>
+            <span id="fileName"></span>
                     {headerImageUrl && <img src={headerImageUrl} alt='Header' style={{ width: '100%'}} />}
                 </div>
 
@@ -115,7 +145,12 @@ function CreatePost() {
                 <div className="form-group">
                     <label>
                         Project Name:
-                        <input type='text' value={projectName} onChange={(e) => setProjectName(e.target.value)} required />
+                        <input 
+                            type='text' 
+                            placeholder='Handcrafted wooden spice rack' 
+                            value={projectName} onChange={(e) => setProjectName(e.target.value)} 
+                            required 
+                        />
                     </label>
                 </div>
                 <div className="form-group">
@@ -132,19 +167,32 @@ function CreatePost() {
                 <div className="form-group">
                     <label>
                         Duration:
-                        <input type='text' value={duration} onChange={(e) => setDuration(e.target.value)} required />
+                        <input 
+                            type='text' 
+                            placeholder='3-4 hours' value={duration} onChange={(e) => setDuration(e.target.value)} 
+                            required 
+                        />
                     </label>
                 </div>
                 <div className="form-group">
                     <label>
                         Tags (Seperated by commas):
-                        <input type='text' value={tags} onChange={(e) => setTags(e.target.value)} required />
+                        <input 
+                            type='text' 
+                            placeholder='woodworking, DIY, rustic, kitchen...' value={tags} onChange={(e) => setTags(e.target.value)} 
+                            required 
+                        />
                     </label>
                 </div>
                 <div className="form-group">
                     <label>
                         Materials and tools (Seperated by commas):
-                        <input type='text' value={materials} onChange={(e) => setMaterials(e.target.value)} required />
+                        <input 
+                            type='text' 
+                            placeholder='hammer, nails, sandpaper, planks...' 
+                            value={materials} onChange={(e) => setMaterials(e.target.value)} 
+                            required 
+                        />
                     </label>
                 </div>
 
@@ -156,23 +204,30 @@ function CreatePost() {
                             Step {index + 1} Description:
                             <textarea
                                 value={step.description}
+                                placeholder='Measure and cut four wood planks to 30 cm each for the spice rack frame...'
                                 onChange={(e) => handleStepDescriptionChange(index, e.target.value)}
                                 required
                             />
                         </label>
-                        <label>
-                            Step {index + 1} Image:
-                            <input type='file' onChange={(e) => handleStepImageChange(index, e)} />
+                        <label className="add-image-button">
+                        <FontAwesomeIcon icon={faPlus} className="plus-icon" />
+                        <span>Add Image</span>
+                        <input
+                            type="file"
+                            onChange={(e) => handleStepImageChange(index, e)}
+                            style={{ display: 'none' }}
+                        />
                         </label>
                         {step.image && <img src={step.image} alt={`Step ${index + 1}`} style={{ width: '100px', marginTop: '10px' }} />}
                     </div>
                 ))}
-                <button  type='button' onClick={addstep}>Add Step</button>
+                <button className='add-step' type='button' onClick={addstep}>Add Step</button>
 
                 {/* Submit */}
-                <button type='submit'>Post</button>
+                <button type='submit' style={{display:'none'}}>Post</button>
             </form>
         </div>
+    </div>
     )
 }
 
